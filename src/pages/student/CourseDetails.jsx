@@ -17,6 +17,7 @@ const CourseDetails = () => {
     calculateChapterTime,
     calculateNoOfLectures,
     calculateCourseDuration,
+    currency,
   } = useContext(AppContext);
 
   const fetchCourseData = async () => {
@@ -89,7 +90,13 @@ const CourseDetails = () => {
                     onClick={() => toggleSection(index)}
                   >
                     <div className="flex items-center gap-2">
-                      <img src={assets.down_arrow_icon} alt="arrow_icon" />
+                      <img
+                        className={`transform transition-transform ${
+                          openSections[index] ? "rotate-180" : ""
+                        }`}
+                        src={assets.down_arrow_icon}
+                        alt="arrow_icon"
+                      />
                       <p className="font-medium md:text-base text-sm">
                         {chapter.chapterTitle}
                       </p>
@@ -137,9 +144,53 @@ const CourseDetails = () => {
               ))}
             </div>
           </div>
+
+          <div className="py-20 text-sm md:text-default">
+            <h3 className="text-xl font-semibold text-gray-800">
+              Course Description
+            </h3>
+            <p
+              className="pt-3 rich-text"
+              dangerouslySetInnerHTML={{
+                __html: courseData.courseDescription,
+              }}
+            ></p>
+          </div>
         </div>
         {/* Right colm */}
-        <div></div>
+        <div className="max-w-course-card z-10 shadow-custom-card rounded-t md:rounded-none overflow-hidden bg-white min-w-[300px] sm:min-w-[420px]">
+          <img src={courseData.courseThumbnail} alt="" />
+          <div className="p-5">
+            <div className="flex items-center gap-2">
+              <img
+                className="w-3.5"
+                src={assets.time_left_clock_icon}
+                alt="time left clock_icon"
+              />
+              <p className="text-red-500">
+                {" "}
+                <span className="font-mediem">5 days</span> left at this price!
+              </p>
+            </div>
+
+            <div className="flex gap-3 items-center pt-2">
+              <p className="text-gray-800 md:text-4xl text-2xl font-semibold">
+                {currency}{" "}
+                {(
+                  courseData.coursePrice -
+                  (courseData.discount * courseData.coursePrice) / 100
+                ).toFixed(2)}
+              </p>
+              <p className="md:text-lg text-gray-500 line-through">
+                {currency}
+                {courseData.coursePrice}
+              </p>
+              <p className="md:text-lg text-gray-500">
+                {courseData.discount}% off
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
     </>
   ) : (
